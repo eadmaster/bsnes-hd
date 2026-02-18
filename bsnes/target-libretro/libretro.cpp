@@ -1136,6 +1136,13 @@ void *retro_get_memory_data(unsigned id)
 		return SuperFamicom::cartridge.getSaveRAM();
 	case RETRO_MEMORY_SYSTEM_RAM:
 		return SuperFamicom::cpu.wram;
+	case RETRO_MEMORY_VIDEO_RAM:
+		if(emulator->configuration("Hacks/PPU/Fast") == "true")
+			return SuperFamicom::ppufast.getVRAM();
+		else
+			return SuperFamicom::ppu.getVRAM();
+	case RETRO_MEMORY_ROM:
+		return SuperFamicom::cartridge.getROM();
 	}
 
     return nullptr;
@@ -1149,6 +1156,10 @@ size_t retro_get_memory_size(unsigned id)
 		return SuperFamicom::cartridge.getSaveRAMSize();
 	case RETRO_MEMORY_SYSTEM_RAM:
 		return 128 * 1024;
+	case RETRO_MEMORY_VIDEO_RAM:
+		return 64 * 1024;
+	case RETRO_MEMORY_ROM:
+		return SuperFamicom::cartridge.getROMSize();
 	}
 
     return 0;
