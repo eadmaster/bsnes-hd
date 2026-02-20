@@ -643,6 +643,18 @@ static bool update_variables() // returns whether video dimensions have changed 
 			emulator->configure("Hacks/PPU/Mode7/StrwinE", false);
 	}
 
+	strcpy(key, "bsnes_sndchan_volume_x");
+	var.key = key;
+	for (int i=0;i<8;i++)
+	{
+		key[strlen("bsnes_sndchan_volume_")] = '1'+i;
+		var.value = NULL;
+		if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var))
+		{
+			SuperFamicom::dsp.get_spc_dsp()->set_user_volume( i, atoi(var.value) );
+		}
+	}
+
 	//override with setting overrides (BSO) if any
 	program->applySettingOverrides();
 
@@ -1069,6 +1081,8 @@ bool retro_load_game(const retro_game_info *game)
 	program->base_name = string(game->path);
 
 	program->load();
+	
+	update_variables();  // needed for custom volumes init
 
 	emulator->connect(SuperFamicom::ID::Port::Controller1, SuperFamicom::ID::Device::Gamepad);
 	emulator->connect(SuperFamicom::ID::Port::Controller2, SuperFamicom::ID::Device::Gamepad);
