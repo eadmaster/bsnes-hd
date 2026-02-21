@@ -979,6 +979,7 @@ size_t retro_serialize_size()
 bool retro_serialize(void *data, size_t size)
 {
 	memcpy(data, emulator->serialize().data(), size);
+	update_variables();  // needed for custom volumes init
 	return true;
 }
 

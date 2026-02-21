@@ -519,16 +519,7 @@ inline void SPC_DSP::voice_output( voice_t const* v, int ch )
 	// Apply user volume if set
 	if (v->user_volume < 100)
 		amp = (amp * (v->user_volume * 655)) >> 16;  // 655 is approximately (1/100) * 2^16
-		//amp = ((float)amp / 100) * v->user_volume; // slow
-	/* debug
-	{
-		int voice_id = 0;
-		int vbit = v->vbit;
-		while (vbit >>= 1) { // Shift right until it hits 0
-			voice_id++;
-		}
-		printf("voice id %d = %d\n", voice_id, v->user_volume);
-	}*/
+		//amp = ((float)amp / 100) * v->user_volume; // slower
 
 	// Add to output total
 	m.t_main_out [ch] += amp;
