@@ -51,7 +51,7 @@ public:
 	enum { voice_count = 8 };
 	void mute_voices( int mask );
 	
-	void set_user_volume( int voice_no, int volume_percent ){ m.voices[voice_no].user_volume = volume_percent; }
+	void set_user_volume( int voice_no, int volume_percent ){ m.voices[voice_no].user_volume = (volume_percent * 65536) / 100; }
 
 // State
 	

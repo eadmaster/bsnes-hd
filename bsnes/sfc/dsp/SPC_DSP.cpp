@@ -517,9 +517,8 @@ inline void SPC_DSP::voice_output( voice_t const* v, int ch )
 	int amp = (m.t_output * (int8_t) VREG(v->regs,voll + ch)) >> 7;
 
 	// Apply user volume if set
-	if (v->user_volume < 100)
-		amp = (amp * (v->user_volume * 655)) >> 16;  // 655 is approximately (1/100) * 2^16
-		//amp = ((float)amp / 100) * v->user_volume; // slower
+	if (v->user_volume < 65536)  // 655 is approximately (1/100) * 2^16
+		amp = (amp * v->user_volume) >> 16;
 
 	// Add to output total
 	m.t_main_out [ch] += amp;
@@ -898,7 +897,7 @@ void SPC_DSP::load( uint8_t const regs [register_count] )
 		v->brr_offset = 1;
 		v->vbit       = 1 << i;
 		v->regs       = &m.regs [i * 0x10];
-		v->user_volume = 100;
+		v->user_volume = 65536;
 	}
 	m.new_kon = REG(kon);
 	m.t_dir   = REG(dir);
